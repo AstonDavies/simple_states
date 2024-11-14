@@ -28,16 +28,15 @@ module SimpleStates
   end
 
   module ClassMethods
-    def new(*)
-      super.tap { |object| States.init(object) }
+    def new(*args, **kwargs)
+      super(*args, **kwargs).tap { |object| States.init(object) }
     end
 
     def allocate
       super.tap { |object| States.init(object) }
     end
 
-    def states(*args)
-      options = args.last.is_a?(Hash) ? args.pop : {}
+    def states(*args, **options)
       self.initial_state = options.delete(:initial).to_sym if options.key?(:initial)
       self.state_options = options
       add_states(*[self.initial_state].concat(args))
